@@ -9,8 +9,12 @@ async def open_file_picker(file_picker: ft.FilePicker, app_state: AppState) -> b
         allowed_extensions=["pdf"]
     )
 
-    if not file_picked or file_picked[0].path is None:
+    if not file_picked:
         return False
 
-    app_state.add_doc(file_picked[0].path)
-    return True
+    file_path = file_picked[0].path
+    if file_path is not None:
+        app_state.add_doc(file_path)
+        return True
+
+    return False
