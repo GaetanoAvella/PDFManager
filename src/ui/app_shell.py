@@ -1,6 +1,8 @@
 import flet as ft
-from core import PdfDocument
-from ui.widgets import build_page_grid
+from ui.widgets import *
+from ui.views import *
+from state import AppState
+
 
 def build_shell(page: ft.Page):
     page.theme_mode = ft.ThemeMode.SYSTEM
@@ -8,60 +10,39 @@ def build_shell(page: ft.Page):
     page.bgcolor = "#0d1117"
     page.padding = 12
 
-    sections = [
-        {"label": "Merge", "icon": ft.Icons.MERGE_TYPE_OUTLINED, "icon_selected": ft.Icons.MERGE_TYPE},
-        {"label": "Edit", "icon": ft.Icons.REORDER_OUTLINED, "icon_selected": ft.Icons.REORDER},
-    ]
-
     file_picker = ft.FilePicker()
+    page.services.append(file_picker)
 
-    async def on_click_open_file(e):
-        file_picked = await file_picker.pick_files(
-            allow_multiple=False,
-            file_type=ft.FilePickerFileType.CUSTOM,
-            allowed_extensions=["pdf"]
-        )
-        file_path = file_picked[0].path
-        if file_path is not None:
-            pdf_doc = PdfDocument(file_path)
-            content_area.content=build_page_grid(page, pdf_doc)
-            content_area.on_click = None
-            page.update()
+    app_state = AppState()
 
+    content_area = ft.Container(expand=True)
 
-    content_area = ft.Container(
-        content=ft.Text(
-            "Inserisci file",
-            size=40,
-        ),
-        expand=True,
-        padding=30,
-        on_click=on_click_open_file
-    )
-
-    def on_nav_change(e):
-        sel_index = e.control.selected_index
-        sel_label = sections[sel_index]["label"]
-
+    def show_start_view():
+        content_area.content = build_start_view(handle_open_file)
         page.update()
 
-    nav_rail = ft.NavigationRail(
-        selected_index=0,
-        label_type=ft.NavigationRailLabelType.ALL,
-        min_width=90,
-        min_extended_width=180,
-        bgcolor="#161b22",
-        indicator_color="#238636",
-        destinations=[
-            ft.NavigationRailDestination(
-                icon=s["icon"],
-                selected_icon=s["icon_selected"],
-                label=s["label"],
-            )
-            for s in sections
-        ],
-        on_change=on_nav_change
-    )
+    def show_open_view():
+        content_area.content = build_open_view(app_state)
+        page.update()
+
+    async def handle_open_file():
+        if await open_file_picker(file_picker, app_state):
+            nav_rail.destinations = build_nav_destinations("FILE_OPEN")
+            nav_rail.data="FILE_OPEN"
+            show_open_view()
+
+    async def on_nav_change(e):
+        page_state = e.control.data
+        selected_section = e.control.selected_index
+
+        match page_state:
+            case "START":
+                if selected_section == 0:
+                    await handle_open_file()
+
+    nav_rail = build_navigation_rail("START", on_nav_change)
+
+    show_start_view()
 
     page.add(
         ft.Row(
@@ -73,5 +54,3 @@ def build_shell(page: ft.Page):
             ]
         )
     )
-
-ft.run(build_shell)

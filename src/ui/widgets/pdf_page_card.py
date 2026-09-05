@@ -2,7 +2,7 @@ import flet as ft
 from core import PdfDocument
 
 
-def build_page_card(page: ft.Page, rebuild_grid , pdf_doc: PdfDocument, pdf_page: PdfDocument.PdfPage, position_in_grid: int) -> ft.Control:
+def build_page_card(rebuild_grid , pdf_doc: PdfDocument, pdf_page: PdfDocument.PdfPage, position_in_grid: int) -> ft.Control:
     card_content = ft.Container(
         content=ft.Column(
             controls=[
@@ -52,11 +52,11 @@ def build_page_card(page: ft.Page, rebuild_grid , pdf_doc: PdfDocument, pdf_page
 
     def on_will_accept(e):
         e.control.content.border = ft.Border.all(2, "#58a6ff")
-        page.update()
+        e.control.update()
 
     def on_leave(e):
         e.control.content.border = ft.Border.all(1, "#30363d")
-        page.update()
+        e.control.update()
 
     def on_accept(e):
         source_control = e.src

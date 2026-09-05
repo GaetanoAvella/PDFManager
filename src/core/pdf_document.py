@@ -29,3 +29,11 @@ class PdfDocument():
 
     def insert_page(self, insert_index: int, page: PdfPage):
         self.pages_list.insert(insert_index, page)
+
+    def __eq__(self, value: object, /) -> bool:
+        if isinstance(value, PdfDocument):
+            return self.pdf_path == value.pdf_path
+        return False
+
+    def __str__(self) -> str:
+        return f"[{self.pdf_path}, {self.pdf_name}, {self.pdf_pages}]"
