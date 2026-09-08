@@ -1,7 +1,7 @@
 import flet as ft
 from ui.widgets import *
 from ui.views import *
-from state import AppState
+from state import AppState, AppView
 
 
 def build_shell(page: ft.Page):
@@ -14,41 +14,42 @@ def build_shell(page: ft.Page):
     page.services.append(file_picker)
 
     app_state = AppState()
+    content_area = build_start_view()
 
-    content_area = ft.Container(expand=True)
+    def build_view_content(view: AppView) -> ft.Control:
+        match view:
+            case AppView.START:
+                return build_start_view()
+            case AppView.EDIT:
+                return build_edit_view(app_state)
 
-    def show_start_view():
-        content_area.content = build_start_view(handle_open_file)
+        return build_start_view()
+
+    def switch_view(view: AppView):
+        side_bar.data = view
+        side_bar.controls = build_side_bar_controls(view, handle_action)
+        side_bar.update()
+
+        content_area.content = build_view_content(view)
         page.update()
 
-    def show_open_view():
-        content_area.content = build_open_view(app_state)
-        page.update()
+    async def handle_action(action: str):
+        match action:
+            case "open":
+                pass # TODO
+            case "edit":
+                if await open_file_picker(file_picker, app_state):
+                    switch_view(AppView.EDIT)
+            case "merge":
+                pass # TODO
 
-    async def handle_open_file():
-        if await open_file_picker(file_picker, app_state):
-            nav_rail.destinations = build_nav_destinations("FILE_OPEN")
-            nav_rail.data="FILE_OPEN"
-            show_open_view()
-
-    async def on_nav_change(e):
-        page_state = e.control.data
-        selected_section = e.control.selected_index
-
-        match page_state:
-            case "START":
-                if selected_section == 0:
-                    await handle_open_file()
-
-    nav_rail = build_navigation_rail("START", on_nav_change)
-
-    show_start_view()
+    side_bar = build_side_bar(AppView.START, handle_action)
 
     page.add(
         ft.Row(
             expand=True,
             controls=[
-                nav_rail,
+                side_bar,
                 ft.VerticalDivider(width=1, color="#30363d"),
                 content_area
             ]
