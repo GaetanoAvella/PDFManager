@@ -20,6 +20,8 @@ def build_shell(page: ft.Page):
         match view:
             case AppView.START:
                 return build_start_view()
+            case AppView.OPEN:
+                return build_read_view(app_state)
             case AppView.EDIT:
                 return build_edit_view(app_state)
 
@@ -36,12 +38,13 @@ def build_shell(page: ft.Page):
     async def handle_action(action: str):
         match action:
             case "open":
-                pass # TODO
+                if await open_file_picker(file_picker, app_state):
+                    switch_view(AppView.OPEN)
             case "edit":
                 if await open_file_picker(file_picker, app_state):
                     switch_view(AppView.EDIT)
             case "merge":
-                pass # TODO
+                pass # TODO merge view
 
     side_bar = build_side_bar(AppView.START, handle_action)
 
