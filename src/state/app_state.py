@@ -5,6 +5,7 @@ class AppState:
     def __init__(self):
         self.loaded_docs: list[PdfDocument] = []
         self.active_doc: PdfDocument | None = None
+        self.active_doc_zoom: float = 1.0
 
     def add_doc(self, doc: PdfDocument | str):
         if isinstance(doc, str):
@@ -24,3 +25,9 @@ class AppState:
 
     def get_active_doc(self) -> PdfDocument | None:
         return self.active_doc
+
+    def get_active_doc_zoom(self) -> float:
+        return self.active_doc_zoom
+
+    def set_active_doc_zoom(self, zoom_level: float):
+        self.active_doc_zoom = zoom_level

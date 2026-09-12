@@ -10,7 +10,8 @@ SECTIONS: dict[AppView, list[dict]] = {
         {"label": "Merge",  "action": "merge"},  #one-shot
     ],
     AppView.OPEN: [
-        {"label": "Zoom", "action": "zoom"}
+        {"label": "+", "action": "zoom_in"},
+        {"label": "-", "action": "zoom_out"}
     ],
     AppView.EDIT: [
         {"label": "Select", "action": "select"},  #on/off

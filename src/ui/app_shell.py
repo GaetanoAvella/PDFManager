@@ -45,6 +45,16 @@ def build_shell(page: ft.Page):
                     switch_view(AppView.EDIT)
             case "merge":
                 pass # TODO merge view
+            case "zoom_out":
+                zoom = app_state.get_active_doc_zoom() - 0.2
+                if zoom > 0.2:
+                    app_state.set_active_doc_zoom(zoom)
+                    switch_view(AppView.OPEN)
+            case "zoom_in":
+                zoom = app_state.get_active_doc_zoom() + 0.2
+                if zoom < 3.0:
+                    app_state.set_active_doc_zoom(zoom)
+                    switch_view(AppView.OPEN)
 
     side_bar = build_side_bar(AppView.START, handle_action)
 

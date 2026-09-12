@@ -18,14 +18,14 @@ class PdfDocument():
         def __init__(self, page_object: pp.PageObject, pdf_source_path: str):
             self.page_content: pp.PageObject = page_object
             self.page_position = self.page_content.page_number
-            self.__pdf_sourc_path = pdf_source_path
+            self.__pdf_source_path = pdf_source_path
             self.__image_cache: str = ""
 
         def render_page_as_image_base64(self, scale: float) -> str:
             if not self.__image_cache == "":
                 return self.__image_cache
 
-            pdfium_doc = pdfium.PdfDocument(self.__pdf_sourc_path)
+            pdfium_doc = pdfium.PdfDocument(self.__pdf_source_path)
             try:
                 pdfium_page = pdfium_doc.get_page(self.page_position)
                 bitmap = pdfium_page.render(scale=scale)
