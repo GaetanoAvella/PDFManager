@@ -1,7 +1,8 @@
 import flet as ft
-from ui import build_shell
+
+from ui import AppController
 
 def main(page: ft.Page):
-    build_shell(page)
+    AppController(page)
 
 ft.run(main)

@@ -18,7 +18,6 @@ def build_page_grid(app_state: AppState) -> ft.GridView:
             cards = []
             grid_pos = 0
             pdf_doc = app_state.get_active_doc()
-            print(pdf_doc)
             if pdf_doc is not None:
                 for pdf_page in pdf_doc.pages_list:
                     card = build_page_card(rebuild_grid, pdf_doc, pdf_page, grid_pos)

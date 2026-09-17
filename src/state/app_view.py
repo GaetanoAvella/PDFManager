@@ -3,6 +3,6 @@ from enum import Enum
 
 class AppView(str, Enum):
     START = "START"
-    OPEN = "OPEN"
+    READ = "READ"
     EDIT = "EDIT"
     MERGE = "MERGE"

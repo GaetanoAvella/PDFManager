@@ -1,5 +1,5 @@
-from .app_shell import build_shell
+from .app_controller import AppController
 
 __all__ = [
-    "build_shell"
+    "AppController",
 ]

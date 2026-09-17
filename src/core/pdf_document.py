@@ -58,6 +58,9 @@ class PdfDocument():
     def get_pages(self) -> list[PdfPage]:
         return self.pages_list
 
+    def get_total_pages(self) -> int:
+        return self.pdf_pages
+
     def __eq__(self, value: object, /) -> bool:
         if isinstance(value, PdfDocument):
             return self.pdf_path == value.pdf_path
